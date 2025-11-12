@@ -2,3 +2,4 @@
 
 /python/build
 *.egg-info
+dist
