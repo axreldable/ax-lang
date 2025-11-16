@@ -4,6 +4,7 @@ setup:
 
 test:
 	pytest -s -v tests/test.py
+	pytest -s -v tests
 
 clean:
 	rm -rf ax_lang.egg-info build dist
