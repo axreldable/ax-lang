@@ -6,6 +6,9 @@ test:
 	pytest -s -v tests/test.py
 	pytest -s -v tests
 
+coverage:
+	coverage-badge -o coverage.svg
+
 clean:
 	rm -rf ax_lang.egg-info build dist
 
