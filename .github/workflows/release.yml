@@ -7,7 +7,7 @@ on:
       - v*
 
 jobs:
-  lint:
+  lint_checks:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +43,7 @@ jobs:
       working-directory: ./python
       run: pytest -s -v tests/test.py
 
-  deploy:
+  pypi_release:
     needs: lint
     runs-on: ubuntu-latest
     permissions:
