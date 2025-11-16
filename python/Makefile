@@ -13,3 +13,9 @@ build: clean
 
 pypi_upload:
 	python -m twine upload dist/* --skip-existing
+
+checks:
+	black ax_lang tests
+	isort ax_lang tests
+	flake8 ax_lang tests
+	mypy ax_lang
