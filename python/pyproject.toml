@@ -48,6 +48,8 @@ dev = [
     "mypy",
     "pre-commit",
     "ruff",
+    "twine",
+    "build"
 ]
 all = ["ax-lang[test,doc,dev]"]
 

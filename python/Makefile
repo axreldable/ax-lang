@@ -24,3 +24,6 @@ checks:
 	isort ax_lang tests
 	flake8 ax_lang tests
 	mypy ax_lang
+
+release:
+	git push --tags

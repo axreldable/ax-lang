@@ -44,7 +44,7 @@ jobs:
       run: pytest -s -v tests/test.py
 
   pypi_release:
-    needs: lint
+    needs: lint_checks
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for trusted publishing
