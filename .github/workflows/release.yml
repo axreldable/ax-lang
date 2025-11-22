@@ -7,44 +7,11 @@ on:
       - v*
 
 jobs:
-  lint_checks:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Install dependencies
-      working-directory: ./python
-      run: |
-        pip install -e .[all]
-
-    - name: Run black
-      working-directory: ./python
-      run: black --check ax_lang tests
-
-    - name: Run isort
-      working-directory: ./python
-      run: isort --check-only ax_lang tests
-
-    - name: Run flake8
-      working-directory: ./python
-      run: flake8 ax_lang tests
-
-    - name: Run mypy
-      working-directory: ./python
-      run: mypy ax_lang
-
-    - name: Run tests
-      working-directory: ./python
-      run: pytest -s -v tests/test.py
+  dev_checks:
+    uses: ./.github/workflows/dev.yml
 
   pypi_release:
-    needs: lint_checks
+    needs: dev_checks
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for trusted publishing

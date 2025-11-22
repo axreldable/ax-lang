@@ -26,4 +26,5 @@ checks:
 	mypy ax_lang
 
 release:
+	git push --delete origin vx.x.x
 	git push --tags
