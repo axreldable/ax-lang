@@ -7,11 +7,11 @@ on:
       - v*
 
 jobs:
-  dev_checks:
+  dev:
     uses: ./.github/workflows/dev.yml
 
   pypi_release:
-    needs: dev_checks
+    needs: dev
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for trusted publishing
