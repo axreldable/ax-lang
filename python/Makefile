@@ -1,13 +1,14 @@
 setup:
 	pip install -e . --verbose
-	pip install -e .[dev]
+	pip install -e .[all]
 
 test:
 	pytest -s -v tests/test.py
 	pytest -s -v tests
 
 coverage:
-	coverage-badge -o coverage.svg
+	coverage-badge -f -o coverage.svg
+	pytest --cov=ax_lang tests --cov-report=html
 
 clean:
 	rm -rf ax_lang.egg-info build dist

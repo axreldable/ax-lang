@@ -1,5 +1,4 @@
 import pytest
-
 from ax_lang.interpreter.ax_lang import AxLang
 
 
