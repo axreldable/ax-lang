@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       working-directory: ./python
       run: |
-        pip install -e .[dev]
+        pip install -e .[all]
 
     - name: Run black
       working-directory: ./python
