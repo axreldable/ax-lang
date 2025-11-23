@@ -32,7 +32,7 @@ Issues = "https://github.com/axreldable/ax-lang/issues"
 test = [
     "pytest",
     "pytest-cov",
-    "codecov",
+    "coverage",
 ]
 doc = [
     "mkdocs",
