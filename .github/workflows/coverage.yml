@@ -27,7 +27,7 @@ jobs:
       - name: Run tests with coverage
         working-directory: ./python
         run: |
-          pytest --cov=ax_lang tests --cov-report=html
+          pytest --cov=ax_lang tests/test.py --cov-report=html
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
