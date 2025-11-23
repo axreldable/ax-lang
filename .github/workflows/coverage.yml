@@ -20,10 +20,12 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
+        working-directory: ./python
         run: |
           pip install -e .[all]
 
       - name: Run tests with coverage
+        working-directory: ./python
         run: |
           pytest --cov=ax_lang tests --cov-report=html
 
