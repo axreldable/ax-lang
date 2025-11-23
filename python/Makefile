@@ -9,6 +9,9 @@ test:
 coverage:
 	coverage-badge -f -o coverage.svg
 	pytest --cov=ax_lang tests --cov-report=html
+	pytest --cov=ax_lang tests/test.py --cov-report=html
+	pytest --cov=ax_lang --cov-fail-under=80 --cov-report=xml
+
 
 clean:
 	rm -rf ax_lang.egg-info build dist
