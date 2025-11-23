@@ -28,3 +28,7 @@ checks:
 release:
 	git push --delete origin vx.x.x
 	git push --tags
+
+pre-commit:
+	pre-commit install
+	pre-commit run
