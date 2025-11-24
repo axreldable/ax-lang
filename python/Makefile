@@ -39,3 +39,4 @@ pre-commit:
 docs:
 	mkdocs build
 	mkdocs gh-deploy --force
+	mike deploy 0.6.0 --push --update-aliases 0.6.0

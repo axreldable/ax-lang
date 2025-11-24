@@ -1,7 +1,6 @@
 name: docs
 
 on:
-  push:
   release:
     types: [created]
 
@@ -24,4 +23,8 @@ jobs:
       - name: Deploy docs
         working-directory: ./python
         run: |
-          mkdocs gh-deploy --force
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch origin gh-pages --depth=1
+          mike deploy --push --update-aliases ${{ github.ref_name }} latest
+          mike set-default --push latest

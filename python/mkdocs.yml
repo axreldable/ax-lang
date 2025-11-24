@@ -8,6 +8,8 @@ theme:
   icon:
     repo: fontawesome/brands/github
   name: "material"
+  features:
+    - navigation.footer
   palette:
     - media: "(prefers-color-scheme: light)"
       primary: "blue"
@@ -31,6 +33,10 @@ plugins:
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
+
+extra:
+  version:
+    provider: mike
 
 nav:
   - "Start": index.md
