@@ -11,14 +11,14 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       primary: "blue"
-      accent: "grey"
+      accent: "white"
       scheme: default
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       primary: "blue"
-      accent: "white"
+      accent: "grey"
       scheme: slate
       toggle:
         icon: material/toggle-switch
