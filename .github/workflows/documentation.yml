@@ -24,4 +24,4 @@ jobs:
       - name: Deploy docs
         working-directory: ./python
         run: |
-          mkdocs gh-deploy
+          mkdocs gh-deploy --force
