@@ -1,0 +1,25 @@
+name: docs
+
+on:
+  push:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        working-directory: ./python
+        run: |
+          pip install -e .[doc]
+
+      - name: Deploy docs
+        working-directory: ./python
+        run: |
+          mkdocs gh-deploy --force
