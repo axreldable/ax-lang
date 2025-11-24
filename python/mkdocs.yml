@@ -8,8 +8,6 @@ theme:
   icon:
     repo: fontawesome/brands/github
   name: "material"
-  features:
-    - navigation.footer
   palette:
     - media: "(prefers-color-scheme: light)"
       primary: "blue"

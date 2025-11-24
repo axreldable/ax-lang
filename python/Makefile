@@ -40,3 +40,9 @@ docs:
 	mkdocs build
 	mkdocs gh-deploy --force
 	mike deploy 0.6.0 --push --update-aliases 0.6.0
+	pip install -e .[doc]
+	mike deploy --update-aliases v0.7.0 latest
+	mike deploy --update-aliases v0.6.0 stable
+	mike list
+	mike set-default latest
+	mike serve
