@@ -7,7 +7,7 @@ import subprocess
 logger = logging.getLogger(__name__)
 
 
-EVA_GRAMMAR_PATH = "ax_lang/interpreter/parser/ax-lang-grammar.bnf.g"
+EVA_GRAMMAR_PATH = "/Users/astarikov/projects/axreldable/axreldable/ax-lang/python/ax_lang/interpreter/parser/ax-lang-grammar.bnf.g"
 
 
 def _get_parsed_value(syntax_cli_output: str) -> str:
