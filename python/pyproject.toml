@@ -85,7 +85,6 @@ exclude_lines = [
 source = [
     "ax_lang/*",
 ]
-
 [tool.coverage.html]
 directory = "coverage_reports"
 
