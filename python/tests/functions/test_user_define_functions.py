@@ -56,15 +56,15 @@ def test_closures(ax_lang):
         """
     (begin
         (var x 10)
-    
+
         (def foo () x)
-        
+
         (def bar ()
         (begin
             (var x 20)
             (+ (foo) x)
         ))
-        
+
         (bar)
     )
     """,
@@ -112,7 +112,7 @@ def test_on_click(ax_lang):
             (var y 20)
             (callback (+ x y))
         ))
-        
+
         (def multy (x)
             (* x 10))
 

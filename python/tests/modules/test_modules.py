@@ -12,14 +12,14 @@ def test_math(ax_lang):
                     (if (< value 0)
                         (- value)
                         value))
-                        
+
                 (def square (x)
                     (* x x))
-                    
+
                 (var MAX_VALUE 1000)
             )
         )
-        
+
         ((prop math abs) (- 10))
     )
     """,
@@ -38,14 +38,14 @@ def test_math_func(ax_lang):
                     (if (< value 0)
                         (- value)
                         value))
-                        
+
                 (def square (x)
                     (* x x))
-                    
+
                 (var MAX_VALUE 1000)
             )
         )
-        
+
         (var abs (prop math abs))
         (abs (- 10))
     )
@@ -65,14 +65,14 @@ def test_max_value(ax_lang):
                     (if (< value 0)
                         (- value)
                         value))
-                        
+
                 (def square (x)
                     (* x x))
-                    
+
                 (var MAX_VALUE 1000)
             )
         )
-        
+
         (prop math MAX_VALUE)
     )
     """,

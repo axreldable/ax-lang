@@ -10,7 +10,7 @@ def test_factorial(ax_lang):
             (if (== x 1)
                 1
                 (* x (factorial (- x 1)))))
-    
+
         (factorial 5)
     )
     """,
@@ -25,9 +25,9 @@ def test_callback(ax_lang):
     (begin
         (def createCallback (x)
             (lambda (y) (+ x y)))
-            
+
         (var fn (createCallback 5))
-        
+
         (fn 10)
     )
     """,

@@ -32,7 +32,7 @@ def test_for(ax_lang):
             (set rez (+ rez 2))
             (set counter (+ counter 1))
         ))
-        
+
         rez
     )
     """,

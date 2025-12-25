@@ -119,8 +119,7 @@ class NativeFunctions:
     def minus(op1, op2=None):
         if op2 is None:
             return -op1
-        else:
-            return op1 - op2
+        return op1 - op2
 
 
 def native_function_names() -> set[str]:
@@ -231,8 +230,7 @@ class AxLang:
             _, condition, consequent, alternate = expr
             if self.eval(condition, env):
                 return self.eval(consequent, env)
-            else:
-                return self.eval(alternate, env)
+            return self.eval(alternate, env)
 
         # while-expression
         if expr[0] == "while":
