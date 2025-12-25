@@ -54,7 +54,7 @@ Increase version in the `python/pyproject.toml` file, e.g. `0.10.0` -> `0.11.0`
 # Tag release (triggers automated pipeline)
 git tag v1.2.3
 git push origin v1.2.3
-git push tags --all
+git push --tags
 ```
 
 ## Documentation development
@@ -72,6 +72,6 @@ cd python && mkdocs build # generates static HTML files in the site/ directory
 cd python && mkdocs serve # starts a local development server (http://127.0.0.1:8000) where you can preview the docs
 ```
 
-### 2. Deploy docs
+### 3. Deploy docs
 
 Docs are deployed automatically via CI on the release.
