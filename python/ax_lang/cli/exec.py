@@ -1,4 +1,5 @@
 # command history support for Unix/Mac
+import logging
 import readline
 
 import click
@@ -26,11 +27,17 @@ def cli(ctx):
 
 @cli.command()
 @click.argument("expression")
-def expr(expression):
+@click.option("--debug", is_flag=True, help="Enable debug logging")
+def expr(expression, debug):
     """Execute an AxLang expression directly.
 
-    Example: axlang expr "((lambda (x) (* x x)) 2)"
+    Examples:
+        axlang expr "((lambda (x) (* x x)) 2)"
+        axlang expr "((lambda (x) (* x x)) 2)" --debug
     """
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+
     eva = AxLang(GlobalEnvironment)
     result = eval_global(expression, eva)
     click.echo(result)
