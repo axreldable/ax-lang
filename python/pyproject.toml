@@ -7,7 +7,7 @@ packages = ["ax_lang"]
 
 [project]
 name = "ax-lang"
-version = "0.12.0"
+version = "0.13.0"
 requires-python = ">=3.12"
 description = "axreldable programing language"
 readme = "README.md"
