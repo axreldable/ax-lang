@@ -5,11 +5,11 @@ import readline
 import click
 from ax_lang.interpreter.ax_lang import AxLang
 from ax_lang.interpreter.ax_lang import GlobalEnvironment
-from ax_lang.parser.parser import get_lisp_representation
+from ax_lang.parser.parser import get_ast
 
 
 def eval_global(src, eva):
-    expr = get_lisp_representation(f"(begin {src})")
+    expr = get_ast(f"(begin {src})")
     return eva.eval(expr)
 
 
@@ -83,7 +83,7 @@ def repl():
 
             # Evaluate and print result
             # Parse the expression without wrapping in begin to maintain state
-            expr = get_lisp_representation(user_input)
+            expr = get_ast(user_input)
             result = eva.eval(expr)
             click.echo(result)
 

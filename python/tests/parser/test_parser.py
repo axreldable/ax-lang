@@ -1,5 +1,5 @@
 from ax_lang.parser.parser import _get_parsed_value
-from ax_lang.parser.parser import get_lisp_representation
+from ax_lang.parser.parser import get_ast
 
 
 def test_get_parsed_value():
@@ -56,13 +56,13 @@ Parsed value:
 
 
 def test_ast_functions():
-    assert get_lisp_representation("(+ (+ 3 2) 5)") == ["+", ["+", 3, 2], 5]
-    assert get_lisp_representation("((lambda (x) (* x x)) 2)") == [
+    assert get_ast("(+ (+ 3 2) 5)") == ["+", ["+", 3, 2], 5]
+    assert get_ast("((lambda (x) (* x x)) 2)") == [
         ["lambda", ["x"], ["*", "x", "x"]],
         2,
     ]
     assert (
-        get_lisp_representation(
+        get_ast(
             """
         (def calc (x y)
             (begin
@@ -79,7 +79,7 @@ def test_ast_functions():
         ]
     )
     assert (
-        get_lisp_representation(
+        get_ast(
             """
         (def factorial (x)
             (if (== x 1)
@@ -98,7 +98,7 @@ def test_ast_functions():
 
 def test_ast_classes():
     assert (
-        get_lisp_representation(
+        get_ast(
             """
         (begin
             (class Point null

@@ -3,7 +3,7 @@ import re
 import types
 from numbers import Number
 
-from ax_lang.parser.parser import get_lisp_representation
+from ax_lang.parser.parser import get_ast
 
 
 logger = logging.getLogger(__name__)
@@ -341,7 +341,7 @@ class AxLang:
             with open(f"{local_path}/modules/{name}.ax") as f:
                 module_src = f.read()
 
-            body = get_lisp_representation(f"(begin {module_src})")
+            body = get_ast(f"(begin {module_src})")
             module_expr = ["module", name, body]
             return self.eval(module_expr, env)
 

@@ -20,7 +20,7 @@ def _get_parsed_value(syntax_cli_output: str) -> str:
     return cleaned_parsed_value
 
 
-def get_lisp_representation(expr: str) -> list:
+def get_ast(expr: str) -> list:
     result = subprocess.run(
         ["syntax-cli", "-g", EVA_GRAMMAR_PATH, "-m", "LALR1", "-p", expr],
         capture_output=True,

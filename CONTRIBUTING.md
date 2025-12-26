@@ -32,10 +32,13 @@ pytest -s -v tests
 pytest --cov=ax_lang tests --cov-report=html
 ```
 
-### 3. Pre commit checks
+### 3. All checks before commit
 
 ```bash
+pytest -s -v tests
 pre-commit run --all-files
+axlang expr "((lambda (x) (* x x)) 2)"
+axlang file ../examples/test.ax
 ```
 
 Find coverage in `python/coverage_reports/index.html`.
