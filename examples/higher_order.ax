@@ -1,0 +1,49 @@
+; Higher-order functions example
+; Demonstrates lambdas, closures, and functions as first-class values
+
+; Function that returns a function (closure)
+(def makeAdder (x)
+  (lambda (y) (+ x y)))
+
+; Create specialized adder functions
+(var add5 (makeAdder 5))
+(var add10 (makeAdder 10))
+
+(var result1 (add5 3))   ; 8
+(var result2 (add10 3))  ; 13
+
+; Function that takes a function as argument
+(def apply (fn x)
+  (fn x))
+
+(var square (lambda (x) (* x x)))
+(var result3 (apply square 4))  ; 16
+
+; Compose two functions
+(def compose (f g)
+  (lambda (x) (f (g x))))
+
+(var double (lambda (x) (* x 2)))
+(var increment (lambda (x) (+ x 1)))
+
+; First increment, then double
+(var doubleThenIncrement (compose increment double))
+(var result4 (doubleThenIncrement 5))  ; 11 (5*2 + 1)
+
+; Counter using closures
+(def makeCounter ()
+  (begin
+    (var count 0)
+    (lambda ()
+      (begin
+        (set count (+ count 1))
+        count))))
+
+(var counter1 (makeCounter))
+(var counter2 (makeCounter))
+
+(var c1a (counter1))  ; 1
+(var c1b (counter1))  ; 2
+(var c2a (counter2))  ; 1 (independent counter)
+
+c1b

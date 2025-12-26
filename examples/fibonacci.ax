@@ -1,0 +1,17 @@
+; Fibonacci sequence example
+; Demonstrates recursion and function definitions
+
+(def fibonacci (n)
+  (if (<= n 1)
+      n
+      (+ (fibonacci (- n 1))
+         (fibonacci (- n 2)))))
+
+; Calculate and display fibonacci numbers
+(var result1 (fibonacci 0))
+(var result2 (fibonacci 5))
+(var result3 (fibonacci 10))
+
+result1  ; 0
+result2  ; 5
+result3  ; 55

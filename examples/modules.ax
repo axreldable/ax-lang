@@ -1,0 +1,42 @@
+; Module system example
+; Demonstrates module definition, import, and namespace management
+
+; Define a Math utilities module
+(module MathUtils
+  (begin
+    (def square (x)
+      (* x x))
+
+    (def cube (x)
+      (* x x x))
+
+    (def abs (x)
+      (if (< x 0)
+          (- 0 x)
+          x))
+
+    (var PI 3.14159)
+    (var E 2.71828)))
+
+; Define a StringUtils module
+(module StringUtils
+  (begin
+    (def concat (a b)
+      (+ a b))
+
+    (var EMPTY "")))
+
+; Import and use the modules
+(import MathUtils)
+(import StringUtils)
+
+; Use MathUtils
+(var squared ((prop MathUtils square) 5))      ; 25
+(var cubed ((prop MathUtils cube) 3))          ; 27
+(var absolute ((prop MathUtils abs) (- 10)))   ; 10
+(var pi (prop MathUtils PI))                   ; 3.14159
+
+; Use StringUtils
+(var message ((prop StringUtils concat) "Hello" " World"))
+
+squared
