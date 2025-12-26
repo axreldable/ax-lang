@@ -1,4 +1,4 @@
-from tests.test_utils import exec_test
+from tests.interpreter.test_utils import exec_test
 
 
 def test_blocks(ax_lang):
