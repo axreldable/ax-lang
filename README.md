@@ -12,6 +12,10 @@
 pip install ax-lang
 ```
 
+## Specification
+
+[Language specification](https://axreldable.github.io/ax-lang/latest/specification/) can be found in the documentation.
+
 ## Usage
 
 After installation, you can use the `axlang` command in three different modes:

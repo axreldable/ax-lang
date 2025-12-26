@@ -1,3 +1,8 @@
 # ax-lang
 
-Axreldable programing language.
+Axreldable programming language.
+
+## Documentation
+
+- [Language Specification](specification.md) - Complete syntax and semantics reference
+- [API Documentation](api.md) - API reference for developers
