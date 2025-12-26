@@ -8,7 +8,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-EVA_GRAMMAR_PATH = str(Path(__file__).parent / "parser" / "ax-lang-grammar.bnf.g")
+EVA_GRAMMAR_PATH = str(Path(__file__).parent / "ax-lang-grammar.bnf.g")
 
 
 def _get_parsed_value(syntax_cli_output: str) -> str:

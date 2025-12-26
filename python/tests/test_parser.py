@@ -1,4 +1,4 @@
-from ax_lang.interpreter.parser import get_lisp_representation
+from ax_lang.parser.parser import get_lisp_representation
 
 
 def test_parser(ax_lang):

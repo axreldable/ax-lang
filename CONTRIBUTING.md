@@ -18,7 +18,7 @@ cd python
 pip install -e ".[all]"
 ```
 
-## Running Tests
+## Running Checks
 
 ### 1. Unit tests
 
@@ -30,6 +30,12 @@ pytest -s -v tests
 
 ```bash
 pytest --cov=ax_lang tests --cov-report=html
+```
+
+### 3. Pre commit checks
+
+```bash
+pre-commit run --all-files
 ```
 
 Find coverage in `python/coverage_reports/index.html`.

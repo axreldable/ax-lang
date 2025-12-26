@@ -4,7 +4,7 @@ import readline
 import click
 from ax_lang.interpreter.ax_lang import AxLang
 from ax_lang.interpreter.ax_lang import GlobalEnvironment
-from ax_lang.interpreter.parser import get_lisp_representation
+from ax_lang.parser.parser import get_lisp_representation
 
 
 def eval_global(src, eva):

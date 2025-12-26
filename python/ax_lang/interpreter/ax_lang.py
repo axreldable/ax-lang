@@ -3,7 +3,7 @@ import re
 import types
 from numbers import Number
 
-from ax_lang.interpreter.parser import get_lisp_representation
+from ax_lang.parser.parser import get_lisp_representation
 
 
 logger = logging.getLogger(__name__)
