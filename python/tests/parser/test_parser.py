@@ -194,3 +194,8 @@ def test_ast_classes():
             [["prop", "p", "calc"], "p"],
         ]
     )
+
+
+def test_ast_atoms():
+    assert get_ast("1") == 1
+    assert get_ast('"test"') == "test"
