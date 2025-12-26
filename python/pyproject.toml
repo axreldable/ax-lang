@@ -23,12 +23,16 @@ classifiers = [
 ]
 dependencies = [
     "antlr4-tools",
-    "antlr4-python3-runtime"
+    "antlr4-python3-runtime",
+    "click"
 ]
 
 [project.urls]
 Repository = "https://github.com/axreldable/ax-lang"
 Issues = "https://github.com/axreldable/ax-lang/issues"
+
+[project.scripts]
+axlang = "ax_lang.interpreter.bin.exec:cli"
 
 [project.optional-dependencies]
 test = [
