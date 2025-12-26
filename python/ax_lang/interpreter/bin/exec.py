@@ -1,3 +1,6 @@
+# command history support for Unix/Mac
+import readline
+
 import click
 from ax_lang.interpreter.ax_lang import AxLang
 from ax_lang.interpreter.ax_lang import GlobalEnvironment
@@ -53,14 +56,14 @@ def repl():
 
     click.echo("AxLang Interactive Interpreter")
     click.echo(f"Version: {GlobalEnvironment.lookup('VERSION')}")
-    click.echo('Type "exit" or "quit" to leave the REPL\n')
+    click.echo('Type "exit" or "quit" to leave the REPL')
+    if readline:
+        click.echo("Command history enabled (use Up/Down arrows)\n")
 
     while True:
         try:
-            # Read input
-            user_input = click.prompt(
-                "axlang>", prompt_suffix=" ", default="", show_default=False
-            )
+            # Read input using built-in input() which works with readline
+            user_input = input("axlang> ")
 
             # Check for exit commands
             if user_input.strip().lower() in ("exit", "quit", "q"):
@@ -72,7 +75,9 @@ def repl():
                 continue
 
             # Evaluate and print result
-            result = eval_global(user_input, eva)
+            # Parse the expression without wrapping in begin to maintain state
+            expr = get_lisp_representation(user_input)
+            result = eva.eval(expr)
             click.echo(result)
 
         except EOFError:
