@@ -98,15 +98,12 @@ def repl(is_debug: bool = False):
         except KeyboardInterrupt:
             # Handle Ctrl+C
             click.echo("\nUse 'exit' or 'quit' to leave the REPL")
-            continue
         except ParserError as error:
             # Handle parser errors
             click.echo(f"ParserError: {error}", err=True)
-            continue
         except InterpreterError as error:
             # Handle evaluation errors
             click.echo(f"InterpreterError: {error}", err=True)
-            continue
         except Exception as error:
             click.echo(f"Error: {error}", err=True)
 
