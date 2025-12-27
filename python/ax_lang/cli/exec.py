@@ -65,7 +65,7 @@ def repl(is_debug: bool = False):
     lang = AxLang()
 
     click.echo("AxLang Interactive Interpreter")
-    click.echo('Type "exit" or "quit/q" to leave the REPL')
+    click.echo('Type "exit", "quit", or "q" to leave the REPL')
     if readline:
         click.echo("Command history enabled (use Up/Down arrows)\n")
 
