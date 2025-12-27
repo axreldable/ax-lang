@@ -4,7 +4,7 @@ import readline
 
 import click
 from ax_lang.interpreter.ax_lang import AxLang
-from ax_lang.interpreter.ax_lang import GlobalEnvironment
+from ax_lang.interpreter.environment import GlobalEnvironment
 from ax_lang.parser.parser import get_ast
 
 
@@ -38,7 +38,7 @@ def expr(expression, debug):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
 
-    eva = AxLang(GlobalEnvironment)
+    eva = AxLang()
     result = eval_global(expression, eva)
     click.echo(result)
 
@@ -50,7 +50,7 @@ def file(filepath):
 
     Example: axlang file examples/test.ax
     """
-    eva = AxLang(GlobalEnvironment)
+    eva = AxLang()
     with open(filepath) as file:
         file_src = file.read()
     result = eval_global(file_src, eva)
@@ -59,7 +59,7 @@ def file(filepath):
 
 def repl():
     """Start the AxLang interactive REPL."""
-    eva = AxLang(GlobalEnvironment)
+    eva = AxLang()
 
     click.echo("AxLang Interactive Interpreter")
     click.echo(f"Version: {GlobalEnvironment.lookup('VERSION')}")

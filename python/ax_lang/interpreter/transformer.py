@@ -5,12 +5,12 @@ logger = logging.getLogger(__name__)
 
 
 class Transformer:
-    def def_to_lambda(self, def_expr):
+    def def_to_lambda(self, def_expr: list) -> list:
         """Translates `def`-expression (function declaration) into a variable declaration with a lambda expression."""
         _, name, params, body = def_expr
         return ["var", name, ["lambda", params, body]]
 
-    def switch_to_if(self, switch_expr):
+    def switch_to_if(self, switch_expr: list) -> list:
         """
         Example:
             Transforming switch expr=`['switch', [['==', 'x', 10], 100], [['>', 'x', 10], 200], ['else', 300]]`...
@@ -34,7 +34,7 @@ class Transformer:
         logger.debug(f"Result if expr=`{if_expr}`.")
         return if_expr
 
-    def for_to_while(self, for_expr):
+    def for_to_while(self, for_expr: list) -> list:
         """
         Transforming `for` expr=`['for', ['var', 'counter', 0], ['<', 'counter', 10],
             ['set', 'counter', ['+', 'counter', 1]], ['set', 'rez', ['+', 'rez', 2]]]`...
@@ -51,25 +51,25 @@ class Transformer:
         logger.debug(f"Result `while` expr=`{while_expr}`.")
         return while_expr
 
-    def inc_to_set(self, expr):
+    def inc_to_set(self, expr: list) -> list:
         """Example: (++ x) -> (set x (+ x 1))."""
         _, var = expr
         set_expr = ["set", var, ["+", var, 1]]
         return set_expr
 
-    def dec_to_set(self, expr):
+    def dec_to_set(self, expr: list) -> list:
         """Example: (-- y) -> (set y (- y 1))."""
         _, var = expr
         set_expr = ["set", var, ["-", var, 1]]
         return set_expr
 
-    def plus_assign_to_set(self, expr):
+    def plus_assign_to_set(self, expr: list) -> list:
         """Example: (+= count 5) -> (set count (+ count 5))."""
         _, var, value = expr
         set_expr = ["set", var, ["+", var, value]]
         return set_expr
 
-    def minus_assign_to_set(self, expr):
+    def minus_assign_to_set(self, expr: list) -> list:
         """Example: (-= level 10) -> (set level (- level 10))"""
         _, var, value = expr
         set_expr = ["set", var, ["-", var, value]]

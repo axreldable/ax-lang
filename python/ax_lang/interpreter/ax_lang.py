@@ -3,6 +3,8 @@ import re
 import types
 from numbers import Number
 
+from ax_lang.interpreter.environment import Environment
+from ax_lang.interpreter.environment import GlobalEnvironment
 from ax_lang.interpreter.transformer import Transformer
 from ax_lang.parser.parser import get_ast
 
@@ -10,87 +12,10 @@ from ax_lang.parser.parser import get_ast
 logger = logging.getLogger(__name__)
 
 
-class Environment:
-    def __init__(self, record: dict, parent: "Environment" = None):
-        self.record = record
-        self.parent = parent
-
-    def define(self, name, value):
-        """Creates a variable with given name and value in the current Environment"""
-        logger.debug(f"Defining name=`{name}` with value=`{value}` in the current env.")
-        self.record[name] = value
-        return value
-
-    def assign(self, name, value):
-        """Updates an existing variable."""
-        name = str(name)  # in case need to assign ['prop', 'this', 'x']
-        var_env = self.resolve(name)
-        var_env.record[name] = value
-        return value
-
-    def lookup(self, name):
-        """Returns the value of the variable
-        or throws if it's not defined.
-        """
-        var_env = self.resolve(name)
-        return var_env.record[name]
-
-    def resolve(self, name) -> "Environment":
-        """Returns the specific env in which the variable is defined.
-        Throws if the variable is not defined.
-        """
-        name = str(name)  # in case need to resolve ['prop', 'this', 'x']
-        if name in self.record:
-            return self
-        if not self.parent:
-            raise ValueError(f"Variable `{name}` is not defined!")
-        return self.parent.resolve(name)
-
-
-class NativeFunctions:
-    @staticmethod
-    def minus(op1, op2=None):
-        if op2 is None:
-            return -op1
-        return op1 - op2
-
-
-def native_function_names() -> set[str]:
-    return {"+", "-", "*", "/", ">", ">=", "<", "<=", "==", "print"}
-
-
-def global_env() -> "Environment":
-    env = Environment(
-        {
-            "null": None,
-            "true": True,
-            "false": False,
-            "VERSION": "0.1.0",
-        }
-    )
-    # Math operations:
-    env.define("+", lambda a, b: a + b)
-    env.define("-", NativeFunctions.minus)
-    env.define("*", lambda a, b: a * b)
-    env.define("/", lambda a, b: a / b)
-    # Comparison operations:
-    env.define(">", lambda a, b: a > b)
-    env.define(">=", lambda a, b: a >= b)
-    env.define("<", lambda a, b: a < b)
-    env.define("<=", lambda a, b: a <= b)
-    env.define("==", lambda a, b: a == b)
-    # print
-    env.define("print", lambda *args: print(" ".join(args)))
-    return env
-
-
-GlobalEnvironment = global_env()
-
-
 class AxLang:
-    def __init__(self, global_env: Environment):
+    def __init__(self):
         """Creates an ax-lang instance with global environment"""
-        self.global_env = global_env
+        self.global_env = GlobalEnvironment
         self.transformer = Transformer()
 
     def _is_variable_name(self, expr):
@@ -99,7 +24,10 @@ class AxLang:
         )
 
     def _is_function_name(self, expr):
-        return isinstance(expr, str) and expr in native_function_names()
+        # fmt: off
+        native_function_names = {"+", "-", "*", "/", ">", ">=", "<", "<=", "==", "print"}
+        # fmt: on
+        return isinstance(expr, str) and expr in native_function_names
 
     def _eval_block(self, block, env):
         logger.debug(f"Evaluating block=`{block}`...")
