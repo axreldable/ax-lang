@@ -14,14 +14,15 @@ def eval_expression(lang, expr):
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def cli(ctx):
+@click.option("--debug", is_flag=True, help="Enable debug logging")
+def cli(ctx, debug):
     """AxLang interpreter command line interface.
 
     Run without arguments to start the interactive REPL.
     """
     if ctx.invoked_subcommand is None:
         # No subcommand provided, start REPL
-        repl()
+        repl(debug)
 
 
 @cli.command()
@@ -56,12 +57,15 @@ def file(filepath):
     click.echo(result)
 
 
-def repl():
+def repl(is_debug: bool = False):
     """Start the AxLang interactive REPL."""
-    eva = AxLang()
+    if is_debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    lang = AxLang()
 
     click.echo("AxLang Interactive Interpreter")
-    click.echo('Type "exit" or "quit" to leave the REPL')
+    click.echo('Type "exit" or "quit/q" to leave the REPL')
     if readline:
         click.echo("Command history enabled (use Up/Down arrows)\n")
 
@@ -82,7 +86,7 @@ def repl():
             # Evaluate and print result
             # Parse the expression without wrapping in begin to maintain state
             expr = get_ast(user_input)
-            result = eva.eval(expr)
+            result = lang.eval(expr)
             click.echo(result)
 
         except EOFError:
