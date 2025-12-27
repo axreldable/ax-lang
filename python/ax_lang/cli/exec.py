@@ -116,7 +116,9 @@ def repl(is_debug: bool = False):
             # Parse the expression without wrapping in begin to maintain state
             expr = get_ast(accumulated_input)
             result = lang.eval(expr)
-            click.echo(result)
+            if not isinstance(result, dict):
+                # dict is evaluated expression - don't print
+                click.echo(result)
 
         except EOFError:
             # Handle Ctrl+D
