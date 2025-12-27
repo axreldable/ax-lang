@@ -3,8 +3,7 @@ def is_expression_complete(expr: str) -> bool:
 
     Returns True if all parentheses are balanced, False otherwise.
     """
-    paren_count = 0
-    bracket_count = 0
+    count = 0
     in_string = False
     escape_next = False
 
@@ -25,9 +24,9 @@ def is_expression_complete(expr: str) -> bool:
             continue
 
         if char == "(":
-            paren_count += 1
+            count += 1
         elif char == ")":
-            paren_count -= 1
+            count -= 1
 
     # Expression is complete if all brackets are balanced and not in a string
-    return paren_count == 0 and bracket_count == 0 and not in_string
+    return count == 0 and not in_string
