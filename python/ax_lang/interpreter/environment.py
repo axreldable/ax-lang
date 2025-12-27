@@ -1,5 +1,7 @@
 import logging
 
+from ax_lang.interpreter.functions import NativeFunctions
+
 
 logger = logging.getLogger(__name__)
 
@@ -88,14 +90,6 @@ class Environment:
         return self.parent.resolve(name)
 
 
-class NativeFunctions:
-    @staticmethod
-    def minus(op1, op2=None):
-        if op2 is None:
-            return -op1
-        return op1 - op2
-
-
 def global_env() -> "Environment":
     env = Environment(
         {
@@ -116,7 +110,7 @@ def global_env() -> "Environment":
     env.define("<=", lambda a, b: a <= b)
     env.define("==", lambda a, b: a == b)
     # print
-    env.define("print", lambda *args: print(" ".join(args)))
+    env.define("print", NativeFunctions.print)
     return env
 
 
