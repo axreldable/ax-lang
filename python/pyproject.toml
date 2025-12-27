@@ -32,7 +32,7 @@ Repository = "https://github.com/axreldable/ax-lang"
 Issues = "https://github.com/axreldable/ax-lang/issues"
 
 [project.scripts]
-axlang = "ax_lang.interpreter.bin.exec:cli"
+axlang = "ax_lang.cli.exec:cli"
 
 [project.optional-dependencies]
 test = [

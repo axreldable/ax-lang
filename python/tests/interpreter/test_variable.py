@@ -12,7 +12,6 @@ def test_variable(ax_lang):
     assert ax_lang.eval("null") is None
     assert ax_lang.eval("true") is True
     assert ax_lang.eval("false") is False
-    assert ax_lang.eval("VERSION") == "0.1.0"
 
     assert ax_lang.eval(["var", "is_user", "true"]) is True
     assert ax_lang.eval("is_user") is True

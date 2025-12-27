@@ -2,13 +2,14 @@ import json
 import logging
 import re
 import subprocess
+from numbers import Number
 from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
 
 
-EVA_GRAMMAR_PATH = str(Path(__file__).parent / "parser" / "ax-lang-grammar.bnf.g")
+EVA_GRAMMAR_PATH = str(Path(__file__).parent / "ax-lang-grammar.bnf.g")
 
 
 def _get_parsed_value(syntax_cli_output: str) -> str:
@@ -20,7 +21,11 @@ def _get_parsed_value(syntax_cli_output: str) -> str:
     return cleaned_parsed_value
 
 
-def get_lisp_representation(expr: str):
+def get_ast(expr: str) -> Number | str | list:
+    # syntax-cli -g ax_lang/parser/ax-lang-grammar.bnf.g -m LALR1 -p 5
+    logger.debug("Parsing expression...")
+    logger.debug(f"Expression: `{expr}`.")
+
     result = subprocess.run(
         ["syntax-cli", "-g", EVA_GRAMMAR_PATH, "-m", "LALR1", "-p", expr],
         capture_output=True,

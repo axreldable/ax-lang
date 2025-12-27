@@ -3,161 +3,26 @@ import re
 import types
 from numbers import Number
 
-from ax_lang.interpreter.parser import get_lisp_representation
+from ax_lang.interpreter.environment import Environment
+from ax_lang.interpreter.environment import GlobalEnvironment
+from ax_lang.interpreter.transformer import Transformer
+from ax_lang.parser.parser import get_ast
 
 
 logger = logging.getLogger(__name__)
 
 
-class Transformer:
-    def def_to_lambda(self, def_expr):
-        """Translates `def`-expression (function declaration) into a variable declaration with a lambda expression."""
-        _, name, params, body = def_expr
-        return ["var", name, ["lambda", params, body]]
-
-    def switch_to_if(self, switch_expr):
-        """
-        Example:
-            Transforming switch expr=`['switch', [['==', 'x', 10], 100], [['>', 'x', 10], 200], ['else', 300]]`...
-            Result if expr=`['if', ['==', 'x', 10], 100, ['if', ['>', 'x', 10], 200, 300]]`.
-        """
-        # ['switch', [['=', 'x', 10], 100], [['>', 'x', 10], 200], ['else', 300]]
-        # ['if', ['==', 'x', 10], 100, ['if', ['>', 'x', 10], 200, 300]]
-        logger.debug(f"Transforming switch expr=`{switch_expr}`...")
-        _, *cases = switch_expr
-        if_expr = ["if", None, None, None]
-        curr_if = if_expr
-        for i in range(len(cases) - 1):
-            curr_cond, curr_block = cases[i]
-            curr_if[1] = curr_cond
-            curr_if[2] = curr_block
-
-            next_cond, next_block = cases[i + 1]
-            curr_if[3] = next_block if next_cond == "else" else ["if", None, None, None]
-
-            curr_if = curr_if[3]
-        logger.debug(f"Result if expr=`{if_expr}`.")
-        return if_expr
-
-    def for_to_while(self, for_expr):
-        """
-        Transforming `for` expr=`['for', ['var', 'counter', 0], ['<', 'counter', 10],
-            ['set', 'counter', ['+', 'counter', 1]], ['set', 'rez', ['+', 'rez', 2]]]`...
-        Result `while` expr=`['begin', ['var', 'counter', 0], ['while', ['<', 'counter', 10],
-            ['begin', ['set', 'rez', ['+', 'rez', 2]], ['set', 'counter', ['+', 'counter', 1]]]]]`.
-        """
-        logger.debug(f"Transforming `for` expr=`{for_expr}`...")
-        _, init, condition, modifier, body = for_expr
-        while_expr = [
-            "begin",
-            init,
-            ["while", condition, ["begin", body, modifier]],
-        ]
-        logger.debug(f"Result `while` expr=`{while_expr}`.")
-        return while_expr
-
-    def inc_to_set(self, expr):
-        _, var = expr
-        set_expr = ["set", var, ["+", var, 1]]
-        return set_expr
-
-    def dec_to_set(self, expr):
-        _, var = expr
-        set_expr = ["set", var, ["-", var, 1]]
-        return set_expr
-
-    def plus_assign_to_set(self, expr):
-        _, var, value = expr
-        set_expr = ["set", var, ["+", var, value]]
-        return set_expr
-
-    def minus_assign_to_set(self, expr):
-        _, var, value = expr
-        set_expr = ["set", var, ["-", var, value]]
-        return set_expr
-
-
-class Environment:
-    def __init__(self, record: dict, parent: "Environment" = None):
-        self.record = record
-        self.parent = parent
-
-    def define(self, name, value):
-        """Creates a variable with given name and value in the current Environment"""
-        logger.debug(f"Defining name=`{name}` with value=`{value}` in the current env.")
-        self.record[name] = value
-        return value
-
-    def assign(self, name, value):
-        """Updates an existing variable."""
-        name = str(name)  # in case need to assign ['prop', 'this', 'x']
-        var_env = self.resolve(name)
-        var_env.record[name] = value
-        return value
-
-    def lookup(self, name):
-        """Returns the value of the variable
-        or throws if it's not defined.
-        """
-        var_env = self.resolve(name)
-        return var_env.record[name]
-
-    def resolve(self, name) -> "Environment":
-        """Returns the specific env in which the variable is defined.
-        Throws if the variable is not defined.
-        """
-        name = str(name)  # in case need to resolve ['prop', 'this', 'x']
-        if name in self.record:
-            return self
-        if not self.parent:
-            raise ValueError(f"Variable `{name}` is not defined!")
-        return self.parent.resolve(name)
-
-
-class NativeFunctions:
-    @staticmethod
-    def minus(op1, op2=None):
-        if op2 is None:
-            return -op1
-        return op1 - op2
-
-
-def native_function_names() -> set[str]:
-    return {"+", "-", "*", "/", ">", ">=", "<", "<=", "==", "print"}
-
-
-def global_env() -> "Environment":
-    env = Environment(
-        {
-            "null": None,
-            "true": True,
-            "false": False,
-            "VERSION": "0.1.0",
-        }
-    )
-    # Math operations:
-    env.define("+", lambda a, b: a + b)
-    env.define("-", NativeFunctions.minus)
-    env.define("*", lambda a, b: a * b)
-    env.define("/", lambda a, b: a / b)
-    # Comparison operations:
-    env.define(">", lambda a, b: a > b)
-    env.define(">=", lambda a, b: a >= b)
-    env.define("<", lambda a, b: a < b)
-    env.define("<=", lambda a, b: a <= b)
-    env.define("==", lambda a, b: a == b)
-    # print
-    env.define("print", lambda *args: print(" ".join(args)))
-    return env
-
-
-GlobalEnvironment = global_env()
-
-
 class AxLang:
-    def __init__(self, global_env: Environment):
-        """Creates an ax-lang instance with global environment"""
-        self.global_env = global_env
+    """Tree-walking interpreter for the ax-lang programming language.
+
+    Evaluates Abstract Syntax Trees (AST) produced by the parser and executes
+    ax-lang programs using environment-based variable scoping, first-class functions,
+    and object-oriented programming features.
+    """
+
+    def __init__(self):
+        """Creates an ax-lang instance with global environment."""
+        self.global_env = GlobalEnvironment
         self.transformer = Transformer()
 
     def _is_variable_name(self, expr):
@@ -166,7 +31,10 @@ class AxLang:
         )
 
     def _is_function_name(self, expr):
-        return isinstance(expr, str) and expr in native_function_names()
+        # fmt: off
+        native_function_names = {"+", "-", "*", "/", ">", ">=", "<", "<=", "==", "print"}
+        # fmt: on
+        return isinstance(expr, str) and expr in native_function_names
 
     def _eval_block(self, block, env):
         logger.debug(f"Evaluating block=`{block}`...")
@@ -189,6 +57,20 @@ class AxLang:
         return self._eval_body(fn["body"], activation_env)
 
     def eval(self, expr: Number | str | list, env: Environment = None):
+        """Evaluates an expression in the given environment.
+
+        Args:
+            expr: AST node (number, string, or list) to evaluate
+            env: Environment for evaluation (defaults to global)
+
+        Returns:
+            Result of evaluation - can be a number, string, dict (for functions/classes),
+            or Environment (for class instances)
+
+        Raises:
+            ValueError: If a variable is not defined
+            NotImplementedError: If an expression type is not supported
+        """
         logger.debug(f"Expr: {expr}")
         env = self.global_env if env is None else env
         # Self-evaluating expressions:
@@ -341,7 +223,7 @@ class AxLang:
             with open(f"{local_path}/modules/{name}.ax") as f:
                 module_src = f.read()
 
-            body = get_lisp_representation(f"(begin {module_src})")
+            body = get_ast(f"(begin {module_src})")
             module_expr = ["module", name, body]
             return self.eval(module_expr, env)
 

@@ -1,38 +1,45 @@
-# command history support for Unix/Mac
-import readline
+import logging
+import readline  # command history support for Unix/Mac
 
 import click
 from ax_lang.interpreter.ax_lang import AxLang
-from ax_lang.interpreter.ax_lang import GlobalEnvironment
-from ax_lang.interpreter.parser import get_lisp_representation
+from ax_lang.parser.parser import get_ast
 
 
-def eval_global(src, eva):
-    expr = get_lisp_representation(f"(begin {src})")
-    return eva.eval(expr)
+def eval_expression(lang, expr):
+    block_expr = f"(begin {expr})"
+    ast = get_ast(block_expr)
+    return lang.eval(ast)
 
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def cli(ctx):
+@click.option("--debug", is_flag=True, help="Enable debug logging")
+def cli(ctx, debug):
     """AxLang interpreter command line interface.
 
     Run without arguments to start the interactive REPL.
     """
     if ctx.invoked_subcommand is None:
         # No subcommand provided, start REPL
-        repl()
+        repl(debug)
 
 
 @cli.command()
 @click.argument("expression")
-def expr(expression):
+@click.option("--debug", is_flag=True, help="Enable debug logging")
+def expr(expression, debug):
     """Execute an AxLang expression directly.
 
-    Example: axlang expr "((lambda (x) (* x x)) 2)"
+    Examples:
+        axlang expr "((lambda (x) (* x x)) 2)"
+        axlang expr "((lambda (x) (* x x)) 2)" --debug
     """
-    eva = AxLang(GlobalEnvironment)
-    result = eval_global(expression, eva)
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    ax_lang = AxLang()
+    result = eval_expression(ax_lang, expression)
     click.echo(result)
 
 
@@ -43,20 +50,22 @@ def file(filepath):
 
     Example: axlang file examples/test.ax
     """
-    eva = AxLang(GlobalEnvironment)
+    ax_lang = AxLang()
     with open(filepath) as file:
         file_src = file.read()
-    result = eval_global(file_src, eva)
+    result = eval_expression(ax_lang, file_src)
     click.echo(result)
 
 
-def repl():
+def repl(is_debug: bool = False):
     """Start the AxLang interactive REPL."""
-    eva = AxLang(GlobalEnvironment)
+    if is_debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    lang = AxLang()
 
     click.echo("AxLang Interactive Interpreter")
-    click.echo(f"Version: {GlobalEnvironment.lookup('VERSION')}")
-    click.echo('Type "exit" or "quit" to leave the REPL')
+    click.echo('Type "exit", "quit", or "q" to leave the REPL')
     if readline:
         click.echo("Command history enabled (use Up/Down arrows)\n")
 
@@ -76,8 +85,8 @@ def repl():
 
             # Evaluate and print result
             # Parse the expression without wrapping in begin to maintain state
-            expr = get_lisp_representation(user_input)
-            result = eva.eval(expr)
+            expr = get_ast(user_input)
+            result = lang.eval(expr)
             click.echo(result)
 
         except EOFError:

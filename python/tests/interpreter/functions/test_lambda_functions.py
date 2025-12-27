@@ -1,4 +1,4 @@
-from tests.test_utils import exec_test
+from tests.interpreter.test_utils import exec_test
 
 
 def test_simple_lambda(ax_lang):

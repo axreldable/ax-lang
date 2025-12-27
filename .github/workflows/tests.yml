@@ -40,4 +40,4 @@ jobs:
 
       - name: Run tests
         working-directory: ./python
-        run: pytest -s -v tests
+        run: pytest -v tests

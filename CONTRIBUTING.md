@@ -18,18 +18,27 @@ cd python
 pip install -e ".[all]"
 ```
 
-## Running Tests
+## Running Checks
 
 ### 1. Unit tests
 
 ```bash
-pytest -s -v tests
+pytest -v tests
 ```
 
 ### 2. Tests with coverage
 
 ```bash
 pytest --cov=ax_lang tests --cov-report=html
+```
+
+### 3. All checks before commit
+
+```bash
+pytest -v tests
+pre-commit run --all-files
+axlang expr "((lambda (x) (* x x)) 2)"
+axlang file ../examples/test.ax
 ```
 
 Find coverage in `python/coverage_reports/index.html`.

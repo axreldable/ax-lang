@@ -30,10 +30,6 @@ axlang
 
 Example session:
 ```
-AxLang Interactive Interpreter
-Version: 0.1.0
-Type "exit" or "quit" to leave the REPL
-
 axlang> (+ 2 3)
 5
 axlang> (var x 10)
