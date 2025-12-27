@@ -13,8 +13,15 @@ logger = logging.getLogger(__name__)
 
 
 class AxLang:
+    """Tree-walking interpreter for the ax-lang programming language.
+
+    Evaluates Abstract Syntax Trees (AST) produced by the parser and executes
+    ax-lang programs using environment-based variable scoping, first-class functions,
+    and object-oriented programming features.
+    """
+
     def __init__(self):
-        """Creates an ax-lang instance with global environment"""
+        """Creates an ax-lang instance with global environment."""
         self.global_env = GlobalEnvironment
         self.transformer = Transformer()
 
@@ -50,6 +57,20 @@ class AxLang:
         return self._eval_body(fn["body"], activation_env)
 
     def eval(self, expr: Number | str | list, env: Environment = None):
+        """Evaluates an expression in the given environment.
+
+        Args:
+            expr: AST node (number, string, or list) to evaluate
+            env: Environment for evaluation (defaults to global)
+
+        Returns:
+            Result of evaluation - can be a number, string, dict (for functions/classes),
+            or Environment (for class instances)
+
+        Raises:
+            ValueError: If a variable is not defined
+            NotImplementedError: If an expression type is not supported
+        """
         logger.debug(f"Expr: {expr}")
         env = self.global_env if env is None else env
         # Self-evaluating expressions:
