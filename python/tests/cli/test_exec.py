@@ -236,7 +236,7 @@ class TestRepl:
 
         # Check that variable value persists
         calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
-        # self.assert_calls_no_errors(calls)
+        self.assert_calls_no_errors(calls)
         assert 10 in calls  # First x evaluation
         assert 15 in calls  # x + 5 evaluation
 
