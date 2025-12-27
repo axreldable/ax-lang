@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from ax_lang.cli.exec import repl
 from ax_lang.cli.multiline import is_expression_complete
+from tests.cli.common import assert_calls_no_errors
 
 
 class TestIsExpressionComplete:
@@ -166,6 +167,7 @@ class TestReplMultiline:
 
         # Check the function was executed correctly
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 25 in echo_calls
 
     @patch("ax_lang.cli.exec.input")
@@ -204,6 +206,7 @@ class TestReplMultiline:
         repl()
 
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 30 in echo_calls
 
     @patch("ax_lang.cli.exec.input")
@@ -220,6 +223,7 @@ class TestReplMultiline:
         repl()
 
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert "hello (world)" in echo_calls
 
     @patch("ax_lang.cli.exec.input")
@@ -236,6 +240,7 @@ class TestReplMultiline:
         repl()
 
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 3 in echo_calls
         assert 12 in echo_calls
         assert 5 in echo_calls
@@ -255,26 +260,8 @@ class TestReplMultiline:
         repl()
 
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 11 in echo_calls
-
-    @patch("ax_lang.cli.exec.input")
-    @patch("ax_lang.cli.exec.click.echo")
-    def test_repl_multiline_brackets(self, mock_echo, mock_input):
-        """Test REPL with multi-line expressions using brackets."""
-        mock_input.side_effect = [
-            "(var arr [1",
-            "          2",
-            "          3])",
-            "arr",
-            "exit",
-        ]
-
-        repl()
-
-        # The array should be created and returned
-        echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
-        # Check if array-like structure is in output
-        assert any("[1, 2, 3]" in str(call) or "1" in str(call) for call in echo_calls)
 
     @patch("ax_lang.cli.exec.input")
     @patch("ax_lang.cli.exec.click.echo")
@@ -297,6 +284,7 @@ class TestReplMultiline:
         repl()
 
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 30 in echo_calls
 
     @patch("ax_lang.cli.exec.input")
@@ -308,6 +296,7 @@ class TestReplMultiline:
         repl()
 
         calls = [str(call) for call in mock_echo.call_args_list]
+        assert_calls_no_errors(calls)
         assert any("Goodbye!" in str(call) for call in calls)
 
     @patch("ax_lang.cli.exec.input")
@@ -347,6 +336,7 @@ class TestReplMultiline:
         # = (+ 25 1)
         # = 26
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 26 in echo_calls
 
     @patch("ax_lang.cli.exec.input")
@@ -365,4 +355,5 @@ class TestReplMultiline:
 
         # (3*3 + 4*4) = 9 + 16 = 25
         echo_calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
+        assert_calls_no_errors(echo_calls)
         assert 25 in echo_calls

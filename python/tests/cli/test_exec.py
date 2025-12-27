@@ -5,6 +5,7 @@ from unittest.mock import patch
 from ax_lang.cli.exec import cli
 from ax_lang.cli.exec import eval_expression
 from ax_lang.cli.exec import repl
+from tests.cli.common import assert_calls_no_errors
 
 
 class TestEvalExpr:
@@ -182,10 +183,6 @@ class TestFileCommand:
 class TestRepl:
     """Tests for the REPL functionality."""
 
-    def assert_calls_no_errors(self, calls: list) -> None:
-        for call in calls:
-            assert "error" not in str(call).lower()
-
     @patch("ax_lang.cli.exec.input")
     @patch("ax_lang.cli.exec.click.echo")
     def test_repl_exit_command(self, mock_echo, mock_input):
@@ -197,7 +194,7 @@ class TestRepl:
         mock_input.assert_called_once()
         # Verify "Goodbye!" was printed
         calls = [str(call) for call in mock_echo.call_args_list]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert any("Goodbye!" in str(call) for call in calls)
 
     @patch("ax_lang.cli.exec.input")
@@ -210,7 +207,7 @@ class TestRepl:
 
         mock_input.assert_called_once()
         calls = [str(call) for call in mock_echo.call_args_list]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert any("Goodbye!" in str(call) for call in calls)
 
     @patch("ax_lang.cli.exec.input")
@@ -223,7 +220,7 @@ class TestRepl:
 
         # Find the call where 3 was echoed (result of 1+2)
         calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert 3 in calls
 
     @patch("ax_lang.cli.exec.input")
@@ -236,7 +233,7 @@ class TestRepl:
 
         # Check that variable value persists
         calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert 10 in calls  # First x evaluation
         assert 15 in calls  # x + 5 evaluation
 
@@ -250,7 +247,7 @@ class TestRepl:
 
         # Should evaluate (+ 1 1) = 2
         calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert 2 in calls
 
     @patch("ax_lang.cli.exec.input")
@@ -262,7 +259,7 @@ class TestRepl:
         repl()
 
         calls = [str(call) for call in mock_echo.call_args_list]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert any("Goodbye!" in str(call) for call in calls)
 
     @patch("ax_lang.cli.exec.input")
@@ -302,7 +299,7 @@ class TestRepl:
         repl()
 
         calls = [call[0][0] for call in mock_echo.call_args_list if call[0]]
-        self.assert_calls_no_errors(calls)
+        assert_calls_no_errors(calls)
         assert 16 in calls
 
 
