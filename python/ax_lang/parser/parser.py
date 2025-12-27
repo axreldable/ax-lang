@@ -23,6 +23,9 @@ def _get_parsed_value(syntax_cli_output: str) -> str:
 
 def get_ast(expr: str) -> Number | str | list:
     # syntax-cli -g ax_lang/parser/ax-lang-grammar.bnf.g -m LALR1 -p 5
+    logger.debug("Parsing expression...")
+    logger.debug(f"Expression: `{expr}`.")
+
     result = subprocess.run(
         ["syntax-cli", "-g", EVA_GRAMMAR_PATH, "-m", "LALR1", "-p", expr],
         capture_output=True,

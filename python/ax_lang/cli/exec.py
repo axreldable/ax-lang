@@ -1,16 +1,15 @@
-# command history support for Unix/Mac
 import logging
-import readline
+import readline  # command history support for Unix/Mac
 
 import click
 from ax_lang.interpreter.ax_lang import AxLang
-from ax_lang.interpreter.environment import GlobalEnvironment
 from ax_lang.parser.parser import get_ast
 
 
-def eval_global(src, eva):
-    expr = get_ast(f"(begin {src})")
-    return eva.eval(expr)
+def eval_expression(lang, expr):
+    block_expr = f"(begin {expr})"
+    ast = get_ast(block_expr)
+    return lang.eval(ast)
 
 
 @click.group(invoke_without_command=True)
@@ -38,8 +37,8 @@ def expr(expression, debug):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
 
-    eva = AxLang()
-    result = eval_global(expression, eva)
+    ax_lang = AxLang()
+    result = eval_expression(ax_lang, expression)
     click.echo(result)
 
 
@@ -50,10 +49,10 @@ def file(filepath):
 
     Example: axlang file examples/test.ax
     """
-    eva = AxLang()
+    ax_lang = AxLang()
     with open(filepath) as file:
         file_src = file.read()
-    result = eval_global(file_src, eva)
+    result = eval_expression(ax_lang, file_src)
     click.echo(result)
 
 
@@ -62,7 +61,6 @@ def repl():
     eva = AxLang()
 
     click.echo("AxLang Interactive Interpreter")
-    click.echo(f"Version: {GlobalEnvironment.lookup('VERSION')}")
     click.echo('Type "exit" or "quit" to leave the REPL')
     if readline:
         click.echo("Command history enabled (use Up/Down arrows)\n")
