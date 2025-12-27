@@ -55,6 +55,10 @@ Parsed value:
     )
 
 
+def test_get_parsed_value_x():
+    assert _get_parsed_value("x") == "x"
+
+
 def test_ast_functions():
     assert get_ast("(+ (+ 3 2) 5)") == ["+", ["+", 3, 2], 5]
     assert get_ast("((lambda (x) (* x x)) 2)") == [
@@ -199,3 +203,4 @@ def test_ast_classes():
 def test_ast_atoms():
     assert get_ast("1") == 1
     assert get_ast('"test"') == "test"
+    assert get_ast("x") == "x"

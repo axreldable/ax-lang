@@ -2,6 +2,8 @@ import logging
 import readline  # command history support for Unix/Mac
 
 import click
+from ax_lang.exceptions import InterpreterError
+from ax_lang.exceptions import ParserError
 from ax_lang.interpreter.ax_lang import AxLang
 from ax_lang.parser.parser import get_ast
 
@@ -97,8 +99,15 @@ def repl(is_debug: bool = False):
             # Handle Ctrl+C
             click.echo("\nUse 'exit' or 'quit' to leave the REPL")
             continue
-        except Exception as error:
+        except ParserError as error:
+            # Handle parser errors
+            click.echo(f"ParserError: {error}", err=True)
+            continue
+        except InterpreterError as error:
             # Handle evaluation errors
+            click.echo(f"InterpreterError: {error}", err=True)
+            continue
+        except Exception as error:
             click.echo(f"Error: {error}", err=True)
 
 
