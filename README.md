@@ -12,12 +12,6 @@
 pip install ax-lang
 ```
 
-### 2. Install locally in editable mode
-
-```bash
-pip install -e .
-```
-
 ## Specification
 
 [Language specification](https://axreldable.github.io/ax-lang/latest/specification/) can be found in the documentation.
