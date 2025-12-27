@@ -2,6 +2,7 @@ import logging
 import readline  # command history support for Unix/Mac
 
 import click
+from ax_lang.cli.multiline import is_expression_complete
 from ax_lang.exceptions import InterpreterError
 from ax_lang.exceptions import ParserError
 from ax_lang.interpreter.ax_lang import AxLang
@@ -73,23 +74,51 @@ def repl(is_debug: bool = False):
 
     while True:
         try:
-            # Read input using built-in input() which works with readline
-            user_input = input("axlang> ")
+            # Accumulate input across multiple lines
+            accumulated_input = ""
+            prompt = "axlang> "
 
-            # Check for exit commands
-            if user_input.strip().lower() in ("exit", "quit", "q"):
-                click.echo("Goodbye!")
-                break
+            while True:
+                # Read input using built-in input() which works with readline
+                line = input(prompt)
 
-            # Skip empty input
-            if not user_input.strip():
+                # Check for exit commands on first line
+                if not accumulated_input and line.strip().lower() in (
+                    "exit",
+                    "quit",
+                    "q",
+                ):
+                    click.echo("Goodbye!")
+                    return
+
+                # Add the line to accumulated input
+                if accumulated_input:
+                    accumulated_input += "\n" + line
+                else:
+                    accumulated_input = line
+
+                # Skip empty input on first line
+                if not accumulated_input.strip():
+                    break
+
+                # Check if expression is complete
+                if is_expression_complete(accumulated_input):
+                    break
+
+                # Continue with continuation prompt
+                prompt = "...     "
+
+            # Skip if no meaningful input
+            if not accumulated_input.strip():
                 continue
 
             # Evaluate and print result
             # Parse the expression without wrapping in begin to maintain state
-            expr = get_ast(user_input)
+            expr = get_ast(accumulated_input)
             result = lang.eval(expr)
-            click.echo(result)
+            if not isinstance(result, dict):
+                # dict is evaluated expression - don't print
+                click.echo(result)
 
         except EOFError:
             # Handle Ctrl+D
