@@ -1,0 +1,14 @@
+(def simple_add (a b)
+  (+ a b))
+
+(def call_many_times (n)
+  (begin
+    (var i 0)
+    (var result 0)
+    (while (< i n)
+      (begin
+        (set result (simple_add result i))
+        (++ i)))
+    result))
+
+(call_many_times 10000)

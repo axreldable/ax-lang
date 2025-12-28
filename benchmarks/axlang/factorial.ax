@@ -1,0 +1,11 @@
+(def factorial (n)
+  (begin
+    (var result 1)
+    (var counter n)
+    (while (> counter 0)
+      (begin
+        (*= result counter)
+        (-- counter)))
+    result))
+
+(factorial 1000)

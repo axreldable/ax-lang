@@ -1,0 +1,22 @@
+(def sum_list (lst)
+  (begin
+    (var sum 0)
+    (var i 0)
+    (var len (length lst))
+    (while (< i len)
+      (begin
+        (+= sum (prop lst i))
+        (++ i)))
+    sum))
+
+(def create_and_sum (n)
+  (begin
+    (var lst (list))
+    (var i 0)
+    (while (< i n)
+      (begin
+        (push lst i)
+        (++ i)))
+    (sum_list lst)))
+
+(create_and_sum 1000)

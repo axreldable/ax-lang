@@ -1,0 +1,29 @@
+(def is_prime (n)
+  (if (<= n 1)
+      false
+      (if (== n 2)
+          true
+          (begin
+            (var i 2)
+            (var prime true)
+            (while (and (<= (* i i) n) prime)
+              (begin
+                (if (== (% n i) 0)
+                    (set prime false)
+                    null)
+                (++ i)))
+            prime))))
+
+(def count_primes (limit)
+  (begin
+    (var count 0)
+    (var i 2)
+    (while (<= i limit)
+      (begin
+        (if (is_prime i)
+            (++ count)
+            null)
+        (++ i)))
+    count))
+
+(count_primes 1000)

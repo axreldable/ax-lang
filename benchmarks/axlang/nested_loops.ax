@@ -1,0 +1,15 @@
+(def nested_loops (n)
+  (begin
+    (var sum 0)
+    (var i 0)
+    (while (< i n)
+      (begin
+        (var j 0)
+        (while (< j n)
+          (begin
+            (+= sum (+ i j))
+            (++ j)))
+        (++ i)))
+    sum))
+
+(nested_loops 100)
