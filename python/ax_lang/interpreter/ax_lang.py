@@ -3,11 +3,9 @@ import re
 import types
 from numbers import Number
 
-from ax_lang.interpreter.environment import Environment
-from ax_lang.interpreter.environment import GlobalEnvironment
+from ax_lang.interpreter.environment import Environment, GlobalEnvironment
 from ax_lang.interpreter.transformer import Transformer
 from ax_lang.parser.parser import get_ast
-
 
 logger = logging.getLogger(__name__)
 
@@ -160,6 +158,11 @@ class AxLang:
         # -= (syntactic sugar for set operation)
         if expr[0] == "-=":
             set_exp = self.transformer.minus_assign_to_set(expr)
+            return self.eval(set_exp, env)
+
+        # *= (syntactic sugar for set operation)
+        if expr[0] == "*=":
+            set_exp = self.transformer.multi_assign_to_set(expr)
             return self.eval(set_exp, env)
 
         # lambda declaration

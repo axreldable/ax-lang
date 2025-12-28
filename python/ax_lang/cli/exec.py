@@ -3,8 +3,7 @@ import readline  # command history support for Unix/Mac
 
 import click
 from ax_lang.cli.multiline import is_expression_complete
-from ax_lang.exceptions import InterpreterError
-from ax_lang.exceptions import ParserError
+from ax_lang.exceptions import InterpreterError, ParserError
 from ax_lang.interpreter.ax_lang import AxLang
 from ax_lang.parser.parser import get_ast
 

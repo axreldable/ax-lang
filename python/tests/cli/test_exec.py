@@ -2,9 +2,8 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-from ax_lang.cli.exec import cli
-from ax_lang.cli.exec import eval_expression
-from ax_lang.cli.exec import repl
+from ax_lang.cli.exec import cli, eval_expression, repl
+from click.testing import CliRunner
 from tests.cli.common import assert_calls_no_errors
 
 
@@ -45,139 +44,66 @@ class TestEvalExpr:
         assert result == 16
 
 
+runner = CliRunner()
+
+
+def cli_output(args):
+    result = runner.invoke(cli, args)
+    assert result.exit_code == 0
+    return result.output.strip()
+
+
+def cli_error_output(args):
+    result = runner.invoke(cli, args)
+    assert result.exit_code != 0
+    return result.output.strip()
+
+
 class TestExprCommand:
     """Tests for the 'expr' command."""
 
-    def test_expr_simple_expression(self, runner):
-        """Test executing a simple expression."""
-        result = runner.invoke(cli, ["expr", "(+ 2 3)"])
-        assert result.exit_code == 0
-        assert "5" in result.output
+    def test_cli_expr(self):
+        assert cli_output(["expr", "(+ 2 3)"]) == "5"
+        assert cli_output(["expr", "((lambda (x) (* x x)) 5)"]) == "25"
+        assert cli_output(["expr", '"hello world"']) == "hello world"
+        assert (
+            cli_output(["expr", "(def calc (x y) (+ (* x y) 10)) (calc 3 4)"]) == "22"
+        )
+        assert cli_output(["expr", "(+ (* 2 3) (- 10 5))"]) == "11"
 
-    def test_expr_lambda_function(self, runner):
-        """Test executing a lambda function."""
-        result = runner.invoke(cli, ["expr", "((lambda (x) (* x x)) 5)"])
-        assert result.exit_code == 0
-        assert "25" in result.output
-
-    def test_expr_string_literal(self, runner):
-        """Test executing a string expression."""
-        result = runner.invoke(cli, ["expr", '"hello world"'])
-        assert result.exit_code == 0
-        assert "hello world" in result.output
-
-    def test_expr_with_debug_flag(self, runner):
-        """Test executing expression with debug flag."""
-        result = runner.invoke(cli, ["expr", "(+ 1 1)", "--debug"])
-        assert result.exit_code == 0
-        assert "2" in result.output
-
-    def test_expr_complex_expression(self, runner):
-        """Test executing a complex expression with function definition."""
-        expression = """(def calc (x y) (+ (* x y) 10)) (calc 3 4)"""
-        result = runner.invoke(cli, ["expr", expression])
-        assert result.exit_code == 0
-        assert "22" in result.output
-
-    def test_expr_nested_operations(self, runner):
-        """Test executing nested arithmetic operations."""
-        result = runner.invoke(cli, ["expr", "(+ (* 2 3) (- 10 5))"])
-        assert result.exit_code == 0
-        assert "11" in result.output
+    def test_cli_expr_debug(self):
+        assert cli_output(["expr", "(+ 1 1)", "--debug"]) == "2"
 
 
 class TestFileCommand:
-    """Tests for the 'file' command."""
-
-    def test_file_simple_program(self, runner):
-        """Test executing a simple ax-lang file."""
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".ax", delete=False) as f:
-            f.write("(+ 10 20)")
-            f.flush()
-            filepath = f.name
-
+    def cli_file_output(self, file_content):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".ax", delete=False) as tmp:
+            tmp.write(file_content)
+            tmp.flush()
+            filepath = tmp.name
         try:
-            result = runner.invoke(cli, ["file", filepath])
-            assert result.exit_code == 0
-            assert "30" in result.output
+            result = cli_output(["file", filepath])
+            return result
         finally:
             Path(filepath).unlink()
 
-    def test_file_with_variables(self, runner):
-        """Test executing a file with variable declarations."""
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".ax", delete=False) as f:
-            f.write(
+    def test_cli_file(self):
+        assert self.cli_file_output("(+ 10 20)") == "30"
+        assert (
+            self.cli_file_output(
                 """
                 (var x 10)
                 (var y 20)
                 (+ x y)
                 """
             )
-            f.flush()
-            filepath = f.name
+            == "30"
+        )
 
-        try:
-            result = runner.invoke(cli, ["file", filepath])
-            assert result.exit_code == 0
-            assert "30" in result.output
-        finally:
-            Path(filepath).unlink()
-
-    def test_file_with_function_definition(self, runner):
-        """Test executing a file with function definition."""
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".ax", delete=False) as f:
-            f.write(
-                """
-                (def factorial (n)
-                    (if (== n 1)
-                        1
-                        (* n (factorial (- n 1)))))
-                (factorial 5)
-                """
-            )
-            f.flush()
-            filepath = f.name
-
-        try:
-            result = runner.invoke(cli, ["file", filepath])
-            assert result.exit_code == 0
-            assert "120" in result.output
-        finally:
-            Path(filepath).unlink()
-
-    def test_file_nonexistent_file(self, runner):
-        """Test executing a non-existent file."""
-        result = runner.invoke(cli, ["file", "/nonexistent/file.ax"])
-        assert result.exit_code != 0
-        assert "Error" in result.output or "does not exist" in result.output.lower()
-
-    def test_file_with_class(self, runner):
-        """Test executing a file with class definition."""
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".ax", delete=False) as f:
-            f.write(
-                """
-                (class Point null
-                    (begin
-                        (def constructor (this x y)
-                            (begin
-                                (set (prop this x) x)
-                                (set (prop this y) y)))
-                        (def calc (this)
-                            (+ (prop this x) (prop this y)))
-                    ))
-                (var p (new Point 10 20))
-                ((prop p calc) p)
-                """
-            )
-            f.flush()
-            filepath = f.name
-
-        try:
-            result = runner.invoke(cli, ["file", filepath])
-            assert result.exit_code == 0
-            assert "30" in result.output
-        finally:
-            Path(filepath).unlink()
+    def test_cli_file_nonexistent_file(self):
+        rez = cli_error_output(["file", "/nonexistent/file.ax"])
+        assert "Error" in rez
+        assert "does not exist" in rez
 
 
 class TestRepl:

@@ -84,3 +84,9 @@ class TestTransformer:
         expr = ["-=", "level", 10]
         expected = ["set", "level", ["-", "level", 10]]
         assert transformer.minus_assign_to_set(expr) == expected
+
+    def test_multi_assign_to_set(self, transformer):
+        # Example: (*= level 10) -> (set level (* level 10))
+        expr = ["*=", "level", 10]
+        expected = ["set", "level", ["*", "level", 10]]
+        assert transformer.multi_assign_to_set(expr) == expected

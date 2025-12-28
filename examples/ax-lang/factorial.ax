@@ -1,0 +1,24 @@
+(def factorial_while (n)
+  (begin
+    (var result 1)
+    (var counter n)
+    (while (> counter 0)
+      (begin
+        (*= result counter)
+        (-- counter)))
+    result))
+
+(def factorial_for (n)
+  (begin
+    (var result 1)
+    (for (var i n)
+         (> i 0)
+         (-- i)
+         (*= result i))
+    result))
+
+(var fact5_while (factorial_while 5))
+(var fact5_for (factorial_for 5))
+(var fact7 (factorial_while 7))
+
+(print fact5_while fact5_for fact7)

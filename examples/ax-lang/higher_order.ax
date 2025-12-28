@@ -1,0 +1,42 @@
+(def makeAdder (x)
+  (lambda (y) (+ x y)))
+
+(var add5 (makeAdder 5))
+(var add10 (makeAdder 10))
+
+(var result1 (add5 3))
+(var result2 (add10 3))
+
+(def apply (fn x)
+  (fn x))
+
+(var square (lambda (x) (* x x)))
+(var result3 (apply square 4))
+
+(def compose (f g)
+  (lambda (x) (f (g x))))
+
+(var double (lambda (x) (* x 2)))
+(var increment (lambda (x) (+ x 1)))
+
+(var doubleThenIncrement (compose increment double))
+(var result4 (doubleThenIncrement 5))
+
+(print result1 result2 result3 result4)
+
+(def makeCounter ()
+  (begin
+    (var count 0)
+    (lambda ()
+      (begin
+        (set count (+ count 1))
+        count))))
+
+(var counter1 (makeCounter))
+(var counter2 (makeCounter))
+
+(var c1a (counter1))
+(var c1b (counter1))
+(var c2a (counter2))
+
+(print c1a c1b c2a)

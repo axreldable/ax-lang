@@ -38,7 +38,7 @@ pytest --cov=ax_lang tests --cov-report=html
 pytest -v tests
 pre-commit run --all-files
 axlang expr "((lambda (x) (* x x)) 2)"
-axlang file ../examples/test.ax
+axlang file ../examples/ax-lang/test.ax
 ```
 
 Find coverage in `python/coverage_reports/index.html`.
