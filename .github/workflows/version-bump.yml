@@ -1,0 +1,131 @@
+name: Auto Version Bump
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper git operations
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version bump type
+        id: determine_bump
+        run: |
+          # Default to patch bump
+          BUMP_TYPE="patch"
+
+          # Check if manually triggered
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            BUMP_TYPE="${{ inputs.bump_type }}"
+          else
+            # Check commit message for [minor] or [major] keywords
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+
+            if echo "$COMMIT_MSG" | grep -qi "\[major\]"; then
+              BUMP_TYPE="major"
+            elif echo "$COMMIT_MSG" | grep -qi "\[minor\]"; then
+              BUMP_TYPE="minor"
+            fi
+
+            # Check for PR labels if this is a merge commit
+            if echo "$COMMIT_MSG" | grep -q "^Merge pull request"; then
+              PR_NUMBER=$(echo "$COMMIT_MSG" | grep -oP '#\K\d+' | head -1)
+              if [ -n "$PR_NUMBER" ]; then
+                LABELS=$(gh pr view $PR_NUMBER --json labels --jq '.labels[].name' || echo "")
+
+                if echo "$LABELS" | grep -q "release:major"; then
+                  BUMP_TYPE="major"
+                elif echo "$LABELS" | grep -q "release:minor"; then
+                  BUMP_TYPE="minor"
+                fi
+              fi
+            fi
+          fi
+
+          echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
+          echo "Determined bump type: $BUMP_TYPE"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if version was already bumped
+        id: check_bump
+        run: |
+          # Get the last commit message
+          LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+
+          # Check if the last commit was a version bump
+          if echo "$LAST_COMMIT_MSG" | grep -q "^Bump version to"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Last commit was already a version bump, skipping."
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        if: steps.check_bump.outputs.skip == 'false'
+        id: bump
+        run: |
+          python .github/scripts/bump_version.py ${{ steps.determine_bump.outputs.bump_type }}
+
+          # Read the new version from pyproject.toml
+          NEW_VERSION=$(grep -oP '^version\s*=\s*"\K[^"]+' python/pyproject.toml)
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Commit version bump
+        if: steps.check_bump.outputs.skip == 'false'
+        run: |
+          git add python/pyproject.toml
+          git commit -m "Bump version to ${{ steps.bump.outputs.new_version }}"
+
+      - name: Create git tag
+        if: steps.check_bump.outputs.skip == 'false'
+        run: |
+          git tag "v${{ steps.bump.outputs.new_version }}"
+
+      - name: Push changes and tag
+        if: steps.check_bump.outputs.skip == 'false'
+        run: |
+          git push origin master
+          git push origin "v${{ steps.bump.outputs.new_version }}"
+
+      - name: Create GitHub Release
+        if: steps.check_bump.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.bump.outputs.new_version }}" \
+            --title "Release v${{ steps.bump.outputs.new_version }}" \
+            --notes "Automated release for version ${{ steps.bump.outputs.new_version }}" \
+            --generate-notes
