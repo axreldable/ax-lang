@@ -16,6 +16,11 @@ pip install ax-lang
 
 [Language specification](https://axreldable.github.io/ax-lang/latest/specification/) can be found in the documentation.
 
+
+## Examples
+
+Find AxLang [example](examples/ax-lang) and their [python](examples/python) equivalents.
+
 ## Usage
 
 After installation, you can use the `axlang` command in three different modes:
@@ -53,7 +58,7 @@ axlang expr "((lambda (x) (* x x)) 2)"
 Run an AxLang program from a file:
 
 ```bash
-axlang file examples/test.ax
+axlang file examples/ax-lang/test.ax
 ```
 
 ---

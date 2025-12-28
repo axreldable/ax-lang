@@ -1,5 +1,4 @@
-from ax_lang.parser.parser import _get_parsed_value
-from ax_lang.parser.parser import get_ast
+from ax_lang.parser.parser import _get_parsed_value, get_ast
 
 
 def test_get_parsed_value():

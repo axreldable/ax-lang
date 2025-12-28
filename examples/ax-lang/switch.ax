@@ -1,0 +1,12 @@
+(def get_grade (score)
+  (switch ((>= score 90) "A")
+          ((>= score 80) "B")
+          ((>= score 70) "C")
+          ((>= score 60) "D")
+          (else "F")))
+
+(var grade1 (get_grade 95))
+(var grade2 (get_grade 75))
+(var grade3 (get_grade 55))
+
+(print grade1 grade2 grade3)

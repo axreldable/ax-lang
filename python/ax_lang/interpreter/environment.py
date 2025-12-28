@@ -2,7 +2,6 @@ import logging
 
 from ax_lang.interpreter.functions import NativeFunctions
 
-
 logger = logging.getLogger(__name__)
 
 

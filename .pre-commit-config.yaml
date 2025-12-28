@@ -25,10 +25,12 @@ repos:
     hooks:
     -   id: flake8
         args: [--config=python/.flake8]
+        exclude: ^examples/
 
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: 'v0.1.5'
     hooks:
     -   id: ruff
         types_or: [python, pyi, jupyter]
-        args: [ --fix, --exit-non-zero-on-fix, --preview ]
+        args: [ --fix, --exit-non-zero-on-fix, --preview, --config=python/pyproject.toml ]
+        exclude: ^examples/

@@ -1,6 +1,5 @@
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -148,4 +147,20 @@ class Transformer:
         """
         _, var, value = expr
         set_expr = ["set", var, ["-", var, value]]
+        return set_expr
+
+    def multi_assign_to_set(self, expr: list) -> list:
+        """Transforms *= to set expression.
+
+        Args:
+            expr: Multi-assign expression ["*=", var, value]
+
+        Returns:
+            Set expression ["set", var, ["*", var, value]]
+
+        Example:
+            ["*=", "level", 10] -> ["set", "level", ["*", "level", 10]]
+        """
+        _, var, value = expr
+        set_expr = ["set", var, ["*", var, value]]
         return set_expr

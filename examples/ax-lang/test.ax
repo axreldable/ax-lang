@@ -3,5 +3,6 @@
 (var abs (prop math abs))
 
 (var x (- 10))
+(set x (abs x))
 
-(abs x)
+x

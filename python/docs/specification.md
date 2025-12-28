@@ -99,7 +99,6 @@ Self-evaluating expressions are literals that evaluate to themselves.
 **Examples:**
 ```lisp
 100
--5.7
 ```
 
 Numbers are self-evaluating. When the interpreter encounters a numeric literal, it directly returns the number value.
