@@ -47,7 +47,7 @@ def get_ast(expr: str) -> Number | str | list:
 
     # a hack to support negative numbers
     number = _try_parse_number(expr)
-    if number:
+    if number is not None:
         return number
 
     result = subprocess.run(
