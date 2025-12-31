@@ -8,7 +8,6 @@ from typing import Optional
 
 from ax_lang.exceptions import ParserError
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -25,20 +24,18 @@ def _get_parsed_value(syntax_cli_output: str) -> str:
     return cleaned_parsed_value
 
 
-def _try_parse_number(a: str) -> Optional[int | float]:
-    a = a.strip()
-    if not a:
+def _try_parse_number(value: str) -> Optional[int | float]:
+    value = value.strip()
+    if not value:
         return None
 
     try:
-        i = int(a)
-        if str(i) == a or a.lstrip("+-") == str(i):
-            return i
+        return int(value)
     except ValueError:
         pass
 
     try:
-        return float(a)
+        return float(value)
     except ValueError:
         return None
 
