@@ -106,6 +106,7 @@ force-exclude = '''
 
 [tool.isort]
 py_version = 311
+profile = "black"
 sections = [
     "FUTURE",
     "STDLIB",
@@ -138,15 +139,8 @@ known_third_party = [
 ]
 known_first_party = []
 known_local_folder = []
-# style: black
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-split_on_trailing_comma = true
 lines_after_imports = 2
-force_single_line = true
+force_single_line = false
 skip_glob = [
     "docs/*",
 ]
