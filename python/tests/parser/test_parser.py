@@ -1,4 +1,5 @@
-from ax_lang.parser.parser import _get_parsed_value, get_ast
+from ax_lang.parser.parser import _get_parsed_value
+from ax_lang.parser.parser import get_ast
 
 
 def test_get_parsed_value():
@@ -201,5 +202,11 @@ def test_ast_classes():
 
 def test_ast_atoms():
     assert get_ast("1") == 1
+    assert get_ast("5.6") == 5.6
     assert get_ast('"test"') == "test"
     assert get_ast("x") == "x"
+
+
+def test_ast_negative_numbers():
+    assert get_ast("-1") == -1
+    assert get_ast("-5.6") == -5.6

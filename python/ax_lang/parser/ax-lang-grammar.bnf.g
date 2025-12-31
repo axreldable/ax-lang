@@ -27,7 +27,7 @@
 
 \"[^\"]*\"         return 'STRING'
 
-\d+               return 'NUMBER'
+^[-+]?\d+(\.\d+)? return 'NUMBER'
 
 [\w\-+*=<>/]+     return 'SYMBOL'
 

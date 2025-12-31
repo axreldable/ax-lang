@@ -4,8 +4,10 @@ import re
 import subprocess
 from numbers import Number
 from pathlib import Path
+from typing import Optional
 
 from ax_lang.exceptions import ParserError
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +25,33 @@ def _get_parsed_value(syntax_cli_output: str) -> str:
     return cleaned_parsed_value
 
 
+def _get_if_number(a: str) -> Optional[int | float]:
+    a = a.strip()
+    if not a:
+        return None
+
+    try:
+        i = int(a)
+        if str(i) == a or a.lstrip("+-") == str(i):
+            return i
+    except ValueError:
+        pass
+
+    try:
+        return float(a)
+    except ValueError:
+        return None
+
+
 def get_ast(expr: str) -> Number | str | list:
     # syntax-cli -g ax_lang/parser/ax-lang-grammar.bnf.g -m LALR1 -p 5
     logger.debug("Parsing expression...")
     logger.debug(f"Expression: `{expr}`.")
+
+    # a hack to support negative numbers
+    number = _get_if_number(expr)
+    if number:
+        return number
 
     result = subprocess.run(
         ["syntax-cli", "-g", EVA_GRAMMAR_PATH, "-m", "LALR1", "-p", expr],
