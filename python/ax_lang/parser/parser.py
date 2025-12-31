@@ -25,7 +25,7 @@ def _get_parsed_value(syntax_cli_output: str) -> str:
     return cleaned_parsed_value
 
 
-def _get_if_number(a: str) -> Optional[int | float]:
+def _try_parse_number(a: str) -> Optional[int | float]:
     a = a.strip()
     if not a:
         return None
@@ -49,7 +49,7 @@ def get_ast(expr: str) -> Number | str | list:
     logger.debug(f"Expression: `{expr}`.")
 
     # a hack to support negative numbers
-    number = _get_if_number(expr)
+    number = _try_parse_number(expr)
     if number:
         return number
 
