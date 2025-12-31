@@ -45,7 +45,7 @@ def get_ast(expr: str) -> Number | str | list:
     logger.debug("Parsing expression...")
     logger.debug(f"Expression: `{expr}`.")
 
-    # a hack to support negative numbers
+    # a hack to support negative numbers as syntax-cli treats them as a flag
     number = _try_parse_number(expr)
     if number is not None:
         return number
