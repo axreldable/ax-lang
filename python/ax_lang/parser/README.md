@@ -19,7 +19,7 @@ npm install -g syntax-cli
 The parser is defined by the BNF grammar in `ax-lang-grammar.bnf.g`, which specifies:
 
 ### Lexical Tokens
-- **NUMBER**: Integer literals (e.g., `42`, `100`)
+- **NUMBER**: Integer and float literals, including negative numbers (e.g., `42`, `100`, `-5.7`, `3.14`)
 - **STRING**: String literals (e.g., `"Hello World"`)
 - **SYMBOL**: Identifiers and operators (e.g., `foo`, `+`, `*`, `==`)
 
@@ -63,6 +63,8 @@ ast = get_ast("42")
 ### Atoms
 ```python
 get_ast("42")           # 42
+get_ast("-5.7")         # -5.7
+get_ast("3.14")         # 3.14
 get_ast('"Hello"')      # "Hello"
 get_ast("foo")          # "foo"
 ```

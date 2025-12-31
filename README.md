@@ -61,6 +61,11 @@ Run an AxLang program from a file:
 axlang file examples/ax-lang/test.ax
 ```
 
+## Implemented modules
+
+- S-expression [parser](python/ax_lang/parser/README.md)
+- AST [interpreter](python/ax_lang/interpreter/README.md)
+
 ---
 
 Built with the help of the great Dmitry Soshnikov's [courses](https://www.udemy.com/user/dmitry-soshnikov/) on

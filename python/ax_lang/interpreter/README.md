@@ -39,8 +39,10 @@ ax = AxLang()
 
 # Evaluate expressions
 result = ax.eval(42)                           # 42
+result = ax.eval(-5.7)                         # -5.7
 result = ax.eval('"hello"')                    # "hello"
 result = ax.eval(["+", 2, 3])                  # 5
+result = ax.eval(["+", 1, -5.7])               # -4.7
 result = ax.eval(["var", "x", 10])             # 10
 result = ax.eval("x")                          # 10
 ```
@@ -49,10 +51,12 @@ result = ax.eval("x")                          # 10
 
 ### Self-Evaluating Expressions
 
-Numbers and strings evaluate to themselves:
+Numbers (integers, floats, and negative numbers) and strings evaluate to themselves:
 
 ```python
 ax.eval(42)          # 42
+ax.eval(-5.7)        # -5.7
+ax.eval(3.14)        # 3.14
 ax.eval('"hello"')   # "hello"
 ```
 
