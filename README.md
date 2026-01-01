@@ -58,7 +58,7 @@ axlang expr "((lambda (x) (* x x)) 2)"
 Run an AxLang program from a file:
 
 ```bash
-axlang file examples/ax-lang/test.ax
+axlang file examples/axlang/test.ax
 ```
 
 ## Implemented modules
