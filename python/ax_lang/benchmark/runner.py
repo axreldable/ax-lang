@@ -5,11 +5,11 @@ if __name__ == "__main__":
     tests = ["factorial", "fibonacci", "higher_order", "simple", "switch"]
 
     # todo:
-    #     finish visual
+    #     finish TableAggregator
     #     integrate to ci
     #     have it as a part of docs
-    runner = BenchmarkRunner(["python"], tests)
+    runner = BenchmarkRunner("python", True)
     # runner = BenchmarkRunner(["axlang"], tests)
-    results = runner.run()
+    results = runner.run(tests)
     agg = TableAggregator([results])
     agg.aggregate()

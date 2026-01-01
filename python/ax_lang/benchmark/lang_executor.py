@@ -17,11 +17,11 @@ class LanguageExecutor(ABC):
         return output
 
     def run(self, full_file_path: str) -> str:
-        cli_command_with_args = [self.lang_cli_runner()] + self.lang_cli_runner_args()
+        cli_command_with_args = self.lang_cli_runner_args()
         return self._run(cli_command_with_args, full_file_path)
 
     @abstractmethod
-    def lang_cli_runner(self) -> str:
+    def lang_name(self) -> str:
         pass
 
     @abstractmethod
@@ -36,23 +36,24 @@ class LanguageExecutor(ABC):
         return "v1"
 
 
+# todo: support yaml config of Executors
 class PythonExecutor(LanguageExecutor):
-    def lang_cli_runner_args(self) -> list[str]:
-        return []
-
-    def lang_cli_runner(self) -> str:
+    def lang_name(self) -> str:
         return "python"
+
+    def lang_cli_runner_args(self) -> list[str]:
+        return ["python"]
 
     def lang_extension(self) -> str:
         return "py"
 
 
 class AxLangExecutor(LanguageExecutor):
-    def lang_cli_runner_args(self) -> list[str]:
-        return ["file"]
+    def lang_name(self) -> str:
+        return "ax-lang"
 
-    def lang_cli_runner(self) -> str:
-        return "axlang"
+    def lang_cli_runner_args(self) -> list[str]:
+        return ["axlang", "file"]
 
     def lang_extension(self) -> str:
         return "ax"

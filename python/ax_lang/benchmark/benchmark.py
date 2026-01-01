@@ -1,59 +1,47 @@
+import logging
 import time
 
 from ax_lang.benchmark.lang_executor import LanguageExecutorFactory
+from ax_lang.benchmark.models import Benchmark, BenchmarkResult, BenchmarkResults
 from ax_lang.utils import get_examples_root
-from pydantic import BaseModel
 
-
-class Benchmark(BaseModel):
-    lang_name: str
-    test_file: str
-
-
-class BenchResult(BaseModel):
-    benchmark: Benchmark
-    duration_sec: float
-    pick_mem_mb: float
-    lang_version: str
-
-
-class BenchResults(BaseModel):
-    bench_results: list[BenchResult]
+logger = logging.getLogger(__name__)
 
 
 class BenchmarkRunner:
-    def _run_benchmark(self, bench: Benchmark) -> BenchResult:
-        executor = LanguageExecutorFactory.get(bench.lang_name)
+    def _run_benchmark(self, bench: Benchmark) -> BenchmarkResult:
+        test_file_path = self._get_full_test_file_path(
+            self.executor.lang_name(), bench.test_case, self.executor.lang_extension()
+        )
 
         start = time.time()
-        executor.run(bench.test_file)
+        if self.dry_run:
+            logger.info("Dry run - benchmark has not been executed.")
+        else:
+            self.executor.run(test_file_path)
         end = time.time()
         duration_sec = end - start
 
-        return BenchResult(
-            benchmark=bench,
+        return BenchmarkResult(
+            lang_name=bench.lang_name,
+            test_case=bench.test_case,
             duration_sec=duration_sec,
             pick_mem_mb=0.0,
-            lang_version=executor.get_lang_version(),
+            lang_version=self.executor.get_lang_version(),
         )
 
-    def _get_full_test_file_path(self, lang: str, test: str, extension: str):
-        return str(get_examples_root() / lang / f"{test}.{extension}")
+    def _get_full_test_file_path(self, dir_name: str, test_case: str, extension: str):
+        return str(get_examples_root() / dir_name / f"{test_case}.{extension}")
 
-    def __init__(self, langs: list[str], tests: list[str]) -> None:
-        self.benchmarks = []
-        for lang in langs:
-            executor = LanguageExecutorFactory.get(lang)
-            for test in tests:
-                test_file = self._get_full_test_file_path(
-                    executor.lang_cli_runner(), test, executor.lang_extension()
-                )
-                benchmark = Benchmark(lang_name=lang, test_file=test_file)
-                self.benchmarks.append(benchmark)
+    def __init__(self, lang: str, dry_run: bool = False) -> None:
+        self.executor = LanguageExecutorFactory.get(lang)
+        self.dry_run = dry_run
 
-    def run(self) -> BenchResults:
+    def run(self, tests: list[str]) -> BenchmarkResults:
         results = []
-        for bench in self.benchmarks:
-            bench_result = self._run_benchmark(bench)
-            results.append(bench_result)
-        return BenchResults(bench_results=results)
+        for test in tests:
+            benchmark = Benchmark(lang_name=self.executor.lang_name(), test_case=test)
+            result = self._run_benchmark(benchmark)
+            results.append(result)
+
+        return BenchmarkResults(benchmark_results=results)

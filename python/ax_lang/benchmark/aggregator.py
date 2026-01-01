@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 
 import pandas as pd
-from ax_lang.benchmark.benchmark import BenchResults
 from tabulate import tabulate
+
+from ax_lang.benchmark.benchmark import BenchmarkResults
 
 
 class ResultAggregator(ABC):
-    def __init__(self, benchmark_results: list[BenchResults]):
+    def __init__(self, benchmark_results: list[BenchmarkResults]):
         self.benchmark_results = benchmark_results
 
     @abstractmethod

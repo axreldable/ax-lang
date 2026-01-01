@@ -87,3 +87,6 @@ source = [
 ]
 [tool.coverage.html]
 directory = "coverage_reports"
+
+[tool.isort]
+profile = "black"
