@@ -31,7 +31,7 @@ class BenchmarkRunner:
             lang=bench.lang,
             test_case=bench.test_case,
             duration_sec=duration_sec,
-            pick_mem_mb=0.0,
+            peak_mem_mb=0.0,
             lang_version=self.executor.get_lang_version(),
         )
 

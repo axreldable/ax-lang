@@ -14,7 +14,7 @@ class BenchmarkResult(BaseModel):
     lang: str
     test_case: str
     duration_sec: float
-    pick_mem_mb: float
+    peak_mem_mb: float
     lang_version: str
 
 

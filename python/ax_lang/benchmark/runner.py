@@ -26,7 +26,7 @@ def print_benchmark_results(langs: list[str], results: list[BenchmarkResults]) -
     print_df(df)
 
     print("Benchmark aggregated memory results:")
-    df = agg.aggregate_by_field("pick_mem_mb", langs)
+    df = agg.aggregate_by_field("peak_mem_mb", langs)
     print_df(df)
 
 
@@ -52,7 +52,7 @@ def benchmark_results_md(langs: list[str], results: list[BenchmarkResults]) -> s
 
     # Aggregated memory results
     md_lines.append("## Benchmark aggregated `memory` results\n")
-    df = agg.aggregate_by_field("pick_mem_mb", langs)
+    df = agg.aggregate_by_field("peak_mem_mb", langs)
     md_lines.append(df.to_markdown())
     md_lines.append("\n")
 
