@@ -18,7 +18,7 @@ pip install ax-lang
 
 ## Examples
 
-Find AxLang [example](examples/ax-lang) and their [python](examples/python) equivalents.
+Find AxLang [example](examples/axlang) and their [python](examples/python) equivalents.
 
 ## Benchmark
 
