@@ -13,4 +13,4 @@ if __name__ == "__main__":
     print_benchmark_results(langs, results)
 
     md_text = benchmark_results_md(langs, results)
-    save_text(md_text, "results.md")
+    save_text(md_text, "RESULTS.md")

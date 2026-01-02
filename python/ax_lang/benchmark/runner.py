@@ -5,7 +5,8 @@ from ax_lang.utils import print_df
 
 
 def run_benchmarks(langs: list[str], tests: list[str]) -> list[BenchmarkResults]:
-    dry_run = True
+    # dry_run = True
+    dry_run = False
     results = []
     for lang in langs:
         runner = BenchmarkRunner(lang, dry_run)

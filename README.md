@@ -16,10 +16,13 @@ pip install ax-lang
 
 [Language specification](https://axreldable.github.io/ax-lang/latest/specification/) can be found in the documentation.
 
-
 ## Examples
 
 Find AxLang [example](examples/ax-lang) and their [python](examples/python) equivalents.
+
+## Benchmark
+
+Benchmark results can be found in the [RESULTS.md](benchmarks/RESULTS.md)
 
 ## Usage
 
@@ -34,6 +37,7 @@ axlang
 ```
 
 Example session:
+
 ```
 axlang> (+ 2 3)
 5
