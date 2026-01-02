@@ -50,7 +50,7 @@ class PythonExecutor(LanguageExecutor):
 
 class AxLangExecutor(LanguageExecutor):
     def lang_name(self) -> str:
-        return "ax-lang"
+        return "axlang"
 
     def lang_cli_runner_args(self) -> list[str]:
         return ["axlang", "file"]
