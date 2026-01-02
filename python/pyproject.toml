@@ -55,7 +55,10 @@ dev = [
     "pre-commit",
     "ruff",
     "twine",
-    "build"
+    "build",
+    "pydantic",
+    "pandas",
+    "tabulate",
 ]
 all = ["ax-lang[test,doc,dev]"]
 

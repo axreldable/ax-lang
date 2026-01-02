@@ -4,3 +4,7 @@ class ParserError(Exception):
 
 class InterpreterError(Exception):
     pass
+
+
+class BenchmarkError(Exception):
+    pass
